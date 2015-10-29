@@ -146,7 +146,7 @@ if (not $config_dir){
 	mkdir "$pweb_homedir/html" unless(-d "$pweb_homedir/html");
 	unless(-f "$pweb_homedir/html/index.html"){
 	  open(my $ifh, "> $pweb_homedir/html/index.html") or die "Could not open file '$pweb_homedir/html/index.html'";
-          print $ifh "<html><title>pweb</title><body><br><br><center>This is a default page for pweb</center></body></html>\n";
+          print $ifh "<html><title>pweb</title><body><br><br><center>This is a default page for pweb<br>Builtin utilities available<br><a href=/filetail>filetail</a><br>Add aditional code to the html directory</center></body></html>\n";
           close $ifh;
 	}
     $server_root = (
@@ -767,7 +767,7 @@ sub filetail() {
     close(DROP);
     }else {
     logmsg "Unable to open $config_dir/filetail.conf";
-        %log_files = ( "nothing configured" => "nothing");      
+        %log_files = ( "nothing configured check permissions" => "nothing");      
     }
    my $file_drop_down;
      foreach my $key (keys %log_files) {
