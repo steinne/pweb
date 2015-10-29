@@ -749,13 +749,14 @@ sub filetail() {
    my ($buffer, @pairs, $pair, $name, $value);
    my ($url,$method,%FORM) = @_;
    my %log_files; 
+   if (-d $config_dir){
    unless(-f "$config_dir/filetail.conf"){
           open(my $ifh, "> $config_dir/filetail.conf") or die "Could not open file '$config_dir/filetail.conf'";
           print $ifh "## enter list of files to be allowed to be searched\n##format is simple_name:/full/path/to/file\n##example is my_access_log:/usr/logs/access_log";
           close $ifh;
         }
-   open (DROP, "$config_dir/filetail.conf");
-      #or log_and_die "Couldn't read config file : $!\n";
+   }
+   if ( open (DROP, "$config_dir/filetail.conf")){
     $log_files{"filetail_conf"} = "$config_dir/filetail.conf";
     while (<DROP>) {
       s/\s//g;
@@ -764,6 +765,10 @@ sub filetail() {
       $log_files{$dname} = $dvalue;
     }
     close(DROP);
+    }else {
+    logmsg "Unable to open $config_dir/filetail.conf";
+        %log_files = ( "nothing configured" => "nothing");      
+    }
    my $file_drop_down;
      foreach my $key (keys %log_files) {
        $file_drop_down .="<option value='" . $key . "'>" . $key . "</option><br>\n";
