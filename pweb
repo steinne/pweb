@@ -145,7 +145,7 @@ if (not $config_dir){
   if ( not $server_root ) {
 	mkdir "$pweb_homedir/html" unless(-d "$pweb_homedir/html");
 	unless(-f "$pweb_homedir/html/index.html"){
-	  open(my $ifh, "> $pweb_homedir/html/index.html") or die "Could not open file '$pweb_homedir/html/index.html'";;
+	  open(my $ifh, "> $pweb_homedir/html/index.html") or die "Could not open file '$pweb_homedir/html/index.html'";
           print $ifh "<html><title>pweb</title><body><br><br><center>This is a default page for pweb</center></body></html>\n";
           close $ifh;
 	}
@@ -748,10 +748,22 @@ PROTECTED:
 sub filetail() {
    my ($buffer, @pairs, $pair, $name, $value);
    my ($url,$method,%FORM) = @_;
-   my %log_files = (
-        "access log"  => "/private/var/log/httpd/access_log",
-         "pweb log"    => "nohup.out",
-        );
+   my %log_files; 
+   unless(-f "$config_dir/filetail.conf"){
+          open(my $ifh, "> $config_dir/filetail.conf") or die "Could not open file '$config_dir/filetail.conf'";
+          print $ifh "## enter list of files to be allowed to be searched\n##format is simple_name:/full/path/to/file\n##example is my_access_log:/usr/logs/access_log";
+          close $ifh;
+        }
+   open (DROP, "$config_dir/filetail.conf");
+      #or log_and_die "Couldn't read config file : $!\n";
+    $log_files{"filetail_conf"} = "$config_dir/filetail.conf";
+    while (<DROP>) {
+      s/\s//g;
+      next if /^#/;             # comments ...
+      my ( $dname, $dvalue ) = split /:/;
+      $log_files{$dname} = $dvalue;
+    }
+    close(DROP);
    my $file_drop_down;
      foreach my $key (keys %log_files) {
        $file_drop_down .="<option value='" . $key . "'>" . $key . "</option><br>\n";
@@ -790,7 +802,7 @@ sub filetail() {
         my $post_tail = $FORM{'post_tail'}; #  'post_tail';
      if ($method eq "POST"){
 	if(my $pid = open(KID, "-|")) { 
-		print "<h2>Results for file \" $FORM{'log'} \" searched with regex \"  $FORM{'regex'} \"</h2>";
+		print Client "<h2>Results for file \" $FORM{'log'} \" searched with regex \"  $FORM{'regex'} \"</h2>";
 		while(<KID>){
 			 print "<br> $_ \n";	
 			 $yes_results=1;
