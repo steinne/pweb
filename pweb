@@ -187,10 +187,20 @@ if (not $config_dir){
       . " Using a minimal set instead"
     );
     %mime_types = (
+      ".zip"  => "application/x-compressed",
+      ".tar"  => "application/x-tar",
+      ".gz"  => "application/x-gzip",
+      ".gzip"  => "application/x-gzip",
+      ".py"  => "text/x-script.phyton",
+      ".pl"  => "text/x-script.perl",
+      ".txt"  => "text/plain",
+      ".png"  => "image/png",
       ".gif"  => "image/gif",
       ".jpg"  => "image/jpeg",
       ".htm"  => "text/html",
-      ".html" => "text/html"
+      ".html" => "text/html",
+      ".css" => "text/css",
+      ".js" => "application/javascript"
     );
   }
 
