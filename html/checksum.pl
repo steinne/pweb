@@ -1,9 +1,6 @@
 #! /usr/bin/perl -w
 use strict;
 use Digest::MD5 qw(md5_base64);
-use constant SUCESS => 0;        # Code for succesful execution.
-use constant ERROR => 1;        # Code for error in execution.
-my $exit_status = 0;
 my $digest = Digest::MD5->new;
 my $file_drop_down = "<option value='.'>This</option>" ;
 
@@ -12,11 +9,6 @@ my $file_drop_down = "<option value='.'>This</option>" ;
      print  "<html><title>$ENV{SERVER_SOFTWARE}</title><body>";
      print  " <h3>Please select the directory to obtain file checksums.</h3><form method='POST' action=checksum.pl>
      <select name='directory'>$file_drop_down</select></select> &nbsp;&nbsp; <input type='submit' name='submit' value='checksum' /></form>";
-#if ($#ARGV < 0) {
-#    print " Inssuficient number of arguments";
-#    print "\nUsage : $0 [dir1]..\n";
-#    exit ERROR;
-#}
 
 my ($buffer,@pairs,$pair,$name, $value,%FORM);
 if ($ENV{REQUEST_METHOD} eq "POST"){
@@ -33,11 +25,9 @@ if ($ENV{REQUEST_METHOD} eq "POST"){
     	$dirname = trimall($dirname);
     	if (! -d $dirname) {
     		print "$dirname is not directory \n";
-    		$exit_status = ERROR;
     		next;
     	} elsif (! -r $dirname) {
     	print "$dirname is not readable. \n";
-    	$exit_status = ERROR;
     	next;
     	}
     	processfiles($dirname);
